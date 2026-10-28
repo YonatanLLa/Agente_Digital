@@ -7,7 +7,7 @@ import Section from '../ui/Section.astro';
   <ol class="relative mx-auto grid max-w-4xl gap-4 sm:grid-cols-2">
     {
       proceso.map((paso, i) => (
-        <li class:list={['flex gap-4 rounded-card border border-line bg-white p-5', i === proceso.length - 1 && 'sm:col-span-2 sm:mx-auto sm:max-w-md']}>
+        <li data-reveal style={`--reveal-delay: ${(i % 2) * 100}ms`} class:list={['flex gap-4 rounded-card border border-line bg-white p-5', i === proceso.length - 1 && 'sm:col-span-2 sm:mx-auto sm:max-w-md']}>
           <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-brand text-sm font-extrabold text-white">{i + 1}</span>
           <div>
             <h3 class="font-bold">{paso.titulo}</h3>

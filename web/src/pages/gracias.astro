@@ -10,12 +10,12 @@ import { whatsappUrl } from '../lib/whatsapp';
 
 <BaseLayout title="¡Gracias por escribirnos!" description="Recibimos tu solicitud y te contactaremos pronto." noindex>
   <section class="container-page flex min-h-[60vh] flex-col items-center justify-center py-20 text-center">
-    <span class="flex size-16 items-center justify-center rounded-full bg-accent-soft text-accent-strong">
+    <span class="anim-pop flex size-16 items-center justify-center rounded-full bg-accent-soft text-accent-strong">
       <Icon nombre="check" class="size-8" />
     </span>
-    <h1 class="mt-6 text-3xl font-extrabold tracking-tight sm:text-4xl">¡Gracias! Recibimos tu solicitud</h1>
-    <p class="mt-4 max-w-lg text-lg text-ink-soft">Te escribiremos en menos de 24 horas hábiles. Si es urgente, háblanos ahora por WhatsApp.</p>
-    <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+    <h1 class="anim-entrada mt-6 text-3xl font-extrabold tracking-tight sm:text-4xl">¡Gracias! Recibimos tu solicitud</h1>
+    <p class="anim-entrada mt-4 max-w-lg text-lg text-ink-soft" style="--delay: 100ms">Te escribiremos en menos de 24 horas hábiles. Si es urgente, háblanos ahora por WhatsApp.</p>
+    <div class="anim-entrada mt-8 flex flex-col gap-3 sm:flex-row" style="--delay: 200ms">
       <Button href={whatsappUrl(site.whatsapp)} variante="whatsapp" target="_blank" rel="noopener" data-whatsapp="gracias">
         <Icon nombre="whatsapp" class="size-5" />
         Escribir por WhatsApp

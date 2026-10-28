@@ -22,6 +22,60 @@
   --color-danger: #c62828;
 
   --radius-card: 1.25rem;
+
+  --ease-salida: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* ---------- Animaciones ---------- */
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(1.25rem);
+  }
+}
+
+/* Solo movimiento, sin opacidad: el título del hero es el elemento principal (LCP) y debe pintarse ya. */
+@keyframes deslizar {
+  from {
+    transform: translateY(1rem);
+  }
+}
+
+@keyframes entrar {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem) scale(0.97);
+  }
+}
+
+@keyframes emerger {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+@keyframes flotar {
+  50% {
+    transform: translateY(-0.5rem);
+  }
+}
+
+@keyframes onda {
+  from {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.7);
+  }
+}
+
+@keyframes fundido {
+  from {
+    opacity: 0;
+  }
 }
 
 @layer base {
@@ -47,8 +101,28 @@
     *::before,
     *::after {
       animation-duration: 0.01ms !important;
+      animation-delay: 0ms !important;
+      animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
+      transition-delay: 0ms !important;
     }
+  }
+
+  /* FAQ: apertura suave de <details> donde el navegador lo soporta; en el resto abre normal. */
+  :root {
+    interpolate-size: allow-keywords;
+  }
+
+  details::details-content {
+    block-size: 0;
+    overflow-y: clip;
+    transition:
+      block-size 0.3s var(--ease-salida),
+      content-visibility 0.3s allow-discrete;
+  }
+
+  details[open]::details-content {
+    block-size: auto;
   }
 }
 
@@ -63,5 +137,64 @@
 
   .heading-section {
     @apply text-3xl font-extrabold tracking-tight text-balance sm:text-4xl;
+  }
+
+  /* Entrada del hero al cargar. Usar style="--delay: 120ms" para escalonar. */
+  .anim-entrada {
+    animation: aparecer 0.8s var(--ease-salida) var(--delay, 0ms) both;
+  }
+
+  .anim-titulo {
+    animation: deslizar 0.8s var(--ease-salida) both;
+  }
+
+  .anim-mockup {
+    animation: entrar 0.9s var(--ease-salida) var(--delay, 0ms) both;
+  }
+
+  .anim-flotante {
+    animation:
+      emerger 0.6s var(--ease-salida) var(--delay, 0ms) both,
+      flotar 6s ease-in-out calc(var(--delay, 0ms) + 0.6s) infinite;
+  }
+
+  .anim-pop {
+    animation: emerger 0.6s var(--ease-salida) both;
+  }
+
+  /* Botón flotante de WhatsApp: aparece y emite una onda suave para llamar la atención. */
+  .whatsapp-flotante {
+    animation: emerger 0.5s var(--ease-salida) 0.8s both;
+  }
+
+  .whatsapp-flotante::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: var(--color-whatsapp);
+    opacity: 0;
+    animation: onda 2.8s ease-out 2s infinite;
+  }
+
+  /* Al cambiar de pestaña en Precios. */
+  [role='tabpanel']:not([hidden]) {
+    animation: fundido 0.35s ease-out;
+  }
+}
+
+/*
+ * Aparición al hacer scroll: [data-reveal] empieza oculto y BaseLayout le agrega .revelado al entrar en pantalla.
+ * Solo si hay JS y el usuario no pidió reducir movimiento; si no, el contenido se ve sin animación.
+ * Escalonar con style="--reveal-delay: 100ms".
+ */
+@media (prefers-reduced-motion: no-preference) and (scripting: enabled) {
+  [data-reveal]:not(.revelado) {
+    opacity: 0;
+  }
+
+  [data-reveal].revelado {
+    animation: aparecer 0.7s var(--ease-salida) var(--reveal-delay, 0ms) both;
   }
 }

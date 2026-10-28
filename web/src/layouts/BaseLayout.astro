@@ -1,4 +1,5 @@
 ---
+import { ClientRouter } from 'astro:transitions';
 import '../styles/global.css';
 import Analytics from '../components/Analytics.astro';
 import Footer from '../components/Footer.astro';
@@ -26,6 +27,7 @@ const { title, description, noindex, jsonLd } = Astro.props;
     <link rel="sitemap" href="/sitemap-index.xml" />
     <SEO title={title} description={description} noindex={noindex} jsonLd={jsonLd} />
     <Analytics />
+    <ClientRouter />
   </head>
   <body>
     <a href="#contenido" class="sr-only z-50 rounded-full bg-brand px-4 py-2 font-semibold text-white focus:not-sr-only focus:fixed focus:top-3 focus:left-3">Saltar al contenido</a>
@@ -37,3 +39,24 @@ const { title, description, noindex, jsonLd } = Astro.props;
     <WhatsAppButton />
   </body>
 </html>
+
+<script>
+  // Aparición al hacer scroll: marca con .revelado los [data-reveal] que entran en pantalla.
+  // El estado oculto y la animación están en global.css; sin JS o con "reducir movimiento" todo se ve normal.
+  let observador: IntersectionObserver | undefined;
+
+  document.addEventListener('astro:page-load', () => {
+    observador?.disconnect();
+    observador = new IntersectionObserver(
+      (entradas, obs) => {
+        for (const entrada of entradas) {
+          if (!entrada.isIntersecting) continue;
+          entrada.target.classList.add('revelado');
+          obs.unobserve(entrada.target);
+        }
+      },
+      { rootMargin: '0px 0px -8% 0px', threshold: 0.1 },
+    );
+    document.querySelectorAll('[data-reveal]:not(.revelado)').forEach((el) => observador!.observe(el));
+  });
+</script>

@@ -29,8 +29,8 @@ import Section from '../ui/Section.astro';
     {
       servicios.map((s, i) => (
         <div role="tabpanel" id={`panel-${s.id}`} aria-labelledby={`tab-${s.id}`} tabindex="0" hidden={i !== 0} class="grid gap-6 lg:grid-cols-3">
-          {paquetes[s.id].map((p) => (
-            <article class:list={['relative flex flex-col rounded-card border bg-white p-7', p.destacado ? 'border-brand shadow-xl shadow-brand/15 lg:-my-3 lg:py-10' : 'border-line']}>
+          {paquetes[s.id].map((p, j) => (
+            <article data-reveal style={`--reveal-delay: ${j * 100}ms`} class:list={['relative flex flex-col rounded-card border bg-white p-7', p.destacado ? 'border-brand shadow-xl shadow-brand/15 lg:-my-3 lg:py-10' : 'border-line']}>
               {p.destacado && <p class="absolute -top-3 left-7 rounded-full bg-brand px-3 py-1 text-xs font-bold text-white">Más elegido</p>}
               <h3 class="text-lg font-bold">{p.nombre}</h3>
               <p class="mt-1 text-sm text-ink-soft">{s.nombre}</p>
@@ -59,30 +59,33 @@ import Section from '../ui/Section.astro';
 
 <script>
   // Pestañas accesibles: clic, flechas, Inicio y Fin (patrón WAI-ARIA Tabs).
-  for (const contenedor of document.querySelectorAll<HTMLElement>('[data-tabs]')) {
-    const tabs = [...contenedor.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
-    const paneles = [...contenedor.querySelectorAll<HTMLElement>('[role="tabpanel"]')];
+  // Se inicializa en cada navegación del ClientRouter.
+  document.addEventListener('astro:page-load', () => {
+    for (const contenedor of document.querySelectorAll<HTMLElement>('[data-tabs]')) {
+      const tabs = [...contenedor.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+      const paneles = [...contenedor.querySelectorAll<HTMLElement>('[role="tabpanel"]')];
 
-    const activar = (indice: number, enfocar = false) => {
+      const activar = (indice: number, enfocar = false) => {
+        tabs.forEach((tab, i) => {
+          const activo = i === indice;
+          tab.setAttribute('aria-selected', String(activo));
+          tab.tabIndex = activo ? 0 : -1;
+          paneles[i].hidden = !activo;
+        });
+        if (enfocar) tabs[indice].focus();
+      };
+
       tabs.forEach((tab, i) => {
-        const activo = i === indice;
-        tab.setAttribute('aria-selected', String(activo));
-        tab.tabIndex = activo ? 0 : -1;
-        paneles[i].hidden = !activo;
+        tab.addEventListener('click', () => activar(i));
+        tab.addEventListener('keydown', (e) => {
+          const ultimo = tabs.length - 1;
+          const teclas: Record<string, number | undefined> = { ArrowRight: i === ultimo ? 0 : i + 1, ArrowLeft: i === 0 ? ultimo : i - 1, Home: 0, End: ultimo };
+          const destino = teclas[e.key];
+          if (destino === undefined) return;
+          e.preventDefault();
+          activar(destino, true);
+        });
       });
-      if (enfocar) tabs[indice].focus();
-    };
-
-    tabs.forEach((tab, i) => {
-      tab.addEventListener('click', () => activar(i));
-      tab.addEventListener('keydown', (e) => {
-        const ultimo = tabs.length - 1;
-        const teclas: Record<string, number | undefined> = { ArrowRight: i === ultimo ? 0 : i + 1, ArrowLeft: i === 0 ? ultimo : i - 1, Home: 0, End: ultimo };
-        const destino = teclas[e.key];
-        if (destino === undefined) return;
-        e.preventDefault();
-        activar(destino, true);
-      });
-    });
-  }
+    }
+  });
 </script>

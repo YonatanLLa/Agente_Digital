@@ -12,34 +12,34 @@ const garantias = ['Diagnóstico gratis', 'Precio cerrado en soles', 'Pagas 50 %
 
   <div class="container-page grid items-center gap-14 py-16 sm:py-24 lg:grid-cols-[1.1fr_1fr]">
     <div>
-      <p class="inline-flex items-center gap-2 rounded-full border border-line bg-white px-3 py-1 text-xs font-semibold text-ink-soft">
+      <p class="anim-entrada inline-flex items-center gap-2 rounded-full border border-line bg-white px-3 py-1 text-xs font-semibold text-ink-soft">
         <span class="size-2 rounded-full bg-accent"></span>
         Agencia digital en {site.ciudad} para todo el Perú
       </p>
-      <h1 id="hero-titulo" class="mt-5 text-4xl leading-[1.08] font-extrabold tracking-tight text-balance sm:text-5xl lg:text-6xl">
+      <h1 id="hero-titulo" class="anim-titulo mt-5 text-4xl leading-[1.08] font-extrabold tracking-tight text-balance sm:text-5xl lg:text-6xl">
         Tu negocio vende más con una web que <span class="bg-linear-to-r from-brand to-accent-strong bg-clip-text text-transparent">trabaja por ti</span>
       </h1>
-      <p class="mt-6 max-w-xl text-lg text-pretty text-ink-soft">
+      <p class="anim-entrada mt-6 max-w-xl text-lg text-pretty text-ink-soft" style="--delay: 100ms">
         Diseñamos landing pages, webs corporativas, tiendas online y sistemas a medida para pymes y emprendedores. Rápidas, listas para Google y con pagos peruanos.
       </p>
-      <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+      <div class="anim-entrada mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap" style="--delay: 200ms">
         <Button href="/#contacto" tamano="lg">
           Cotiza tu proyecto gratis
-          <Icon nombre="flecha" class="size-5" />
+          <Icon nombre="flecha" class="size-5 transition-transform group-hover:translate-x-1" />
         </Button>
         <Button href={whatsappUrl(site.whatsapp)} variante="secundario" tamano="lg" target="_blank" rel="noopener" data-whatsapp="hero">
           <Icon nombre="whatsapp" class="size-5 text-whatsapp" />
           Escríbenos por WhatsApp
         </Button>
       </div>
-      <ul class="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm font-medium text-ink-soft">
+      <ul class="anim-entrada mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm font-medium text-ink-soft" style="--delay: 300ms">
         {garantias.map((g) => <li class="flex items-center gap-1.5"><Icon nombre="check" class="size-4 text-accent" />{g}</li>)}
       </ul>
     </div>
 
     <!-- Ilustración hecha con HTML: no pesa como una imagen y se adapta a la marca. -->
     <div class="relative mx-auto w-full max-w-md lg:max-w-none" aria-hidden="true">
-      <div class="rounded-card border border-line bg-white shadow-2xl shadow-brand/15">
+      <div class="anim-mockup rounded-card border border-line bg-white shadow-2xl shadow-brand/15" style="--delay: 150ms">
         <div class="flex items-center gap-1.5 border-b border-line px-4 py-3">
           <span class="size-2.5 rounded-full bg-[#ff5f57]"></span>
           <span class="size-2.5 rounded-full bg-[#febc2e]"></span>
@@ -65,14 +65,14 @@ const garantias = ['Diagnóstico gratis', 'Precio cerrado en soles', 'Pagas 50 %
         </div>
       </div>
 
-      <div class="absolute -bottom-6 -left-4 flex items-center gap-3 rounded-2xl border border-line bg-white px-4 py-3 shadow-xl sm:-left-8">
+      <div class="anim-flotante absolute -bottom-6 -left-4 flex items-center gap-3 rounded-2xl border border-line bg-white px-4 py-3 shadow-xl sm:-left-8" style="--delay: 750ms">
         <span class="flex size-10 items-center justify-center rounded-full bg-accent-soft text-accent"><Icon nombre="grafico" class="size-5" /></span>
         <div>
           <p class="text-xs text-ink-soft">Nuevo lead</p>
           <p class="text-sm font-bold">Cotización recibida</p>
         </div>
       </div>
-      <div class="absolute -top-5 -right-3 flex items-center gap-2 rounded-2xl border border-line bg-white px-4 py-3 shadow-xl sm:-right-6">
+      <div class="anim-flotante absolute -top-5 -right-3 flex items-center gap-2 rounded-2xl border border-line bg-white px-4 py-3 shadow-xl sm:-right-6" style="--delay: 550ms">
         <span class="flex size-8 items-center justify-center rounded-full bg-whatsapp/15 text-whatsapp"><Icon nombre="whatsapp" class="size-4" /></span>
         <p class="text-sm font-bold">Pago con Yape ✓</p>
       </div>

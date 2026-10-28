@@ -12,7 +12,7 @@ const control = 'block w-full rounded-xl border border-line bg-white px-4 py-3 t
 
 <section id="contacto" aria-labelledby="contacto-titulo" class="bg-linear-to-br from-brand-strong via-brand to-[#6d4ff0] py-20 text-white sm:py-24">
   <div class="container-page grid gap-12 lg:grid-cols-[1fr_1.15fr] lg:items-start">
-    <div>
+    <div data-reveal>
       <p class="text-sm font-semibold tracking-wider text-white/80 uppercase">Contacto</p>
       <h2 id="contacto-titulo" class="mt-2 text-3xl font-extrabold tracking-tight text-balance sm:text-4xl">Cuéntanos tu proyecto y recibe una propuesta sin costo</h2>
       <p class="mt-4 max-w-md text-lg text-white/85">Te respondemos en menos de 24 horas hábiles con los siguientes pasos y un rango de precio.</p>
@@ -33,7 +33,7 @@ const control = 'block w-full rounded-xl border border-line bg-white px-4 py-3 t
       </ul>
     </div>
 
-    <div class="rounded-card bg-white p-6 text-ink shadow-2xl sm:p-8">
+    <div class="rounded-card bg-white p-6 text-ink shadow-2xl sm:p-8" data-reveal style="--reveal-delay: 150ms">
       <form id="form-contacto" novalidate class="grid gap-5 sm:grid-cols-2">
         <Campo id="nombre" label="Nombre">
           <input id="nombre" name="nombre" required minlength="2" maxlength="100" autocomplete="name" aria-describedby="nombre-error" class={control} />
@@ -80,7 +80,7 @@ const control = 'block w-full rounded-xl border border-line bg-white px-4 py-3 t
         <div class="sm:col-span-2">
           <Button type="submit" tamano="lg" class="w-full" id="form-enviar">
             <span data-texto>Enviar y recibir propuesta</span>
-            <Icon nombre="flecha" class="size-5" />
+            <Icon nombre="flecha" class="size-5 transition-transform group-hover:translate-x-1" />
           </Button>
           <div id="form-estado" role="status" aria-live="polite" class="mt-4 empty:hidden"></div>
         </div>
@@ -104,138 +104,145 @@ const control = 'block w-full rounded-xl border border-line bg-white px-4 py-3 t
 
 <script>
   import { PUBLIC_WHATSAPP_NUMBER } from 'astro:env/client';
+  import { navigate } from 'astro:transitions/client';
   import { track } from '../../lib/analytics';
   import { enviarLead, leerUtm, type CampoLead, type Lead } from '../../lib/leads';
   import { whatsappUrl } from '../../lib/whatsapp';
 
-  const form = document.getElementById('form-contacto') as HTMLFormElement;
-  const boton = document.getElementById('form-enviar') as HTMLButtonElement;
-  const textoBoton = boton.querySelector<HTMLElement>('[data-texto]')!;
-  const estado = document.getElementById('form-estado')!;
-  const plantillaError = document.getElementById('plantilla-error-servidor') as HTMLTemplateElement;
-
   type Control = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
-  const controles = [...form.querySelectorAll<Control>('input:not([name="website"]), select, textarea')];
 
-  leerUtm(); // guarda los UTM en la sesión al cargar
+  // Con ClientRouter el formulario se vuelve a crear en cada navegación a la página.
+  document.addEventListener('astro:page-load', iniciarFormulario);
 
-  function mensajeDeError(control: Control): string {
-    const v = control.validity;
-    if (v.valueMissing) return control.type === 'checkbox' ? 'Necesitamos tu autorización para contactarte.' : 'Este campo es obligatorio.';
-    if (v.typeMismatch) return 'Ingresa un correo válido.';
-    if (v.patternMismatch) return 'Ingresa un número de teléfono válido.';
-    if (v.tooShort) return `Escribe al menos ${(control as HTMLInputElement).minLength} caracteres.`;
-    if (v.tooLong) return 'El texto es demasiado largo.';
-    return '';
-  }
+  function iniciarFormulario() {
+    if (!document.getElementById('form-contacto')) return; // páginas sin formulario
+    const form = document.getElementById('form-contacto') as HTMLFormElement;
+    const boton = document.getElementById('form-enviar') as HTMLButtonElement;
+    const textoBoton = boton.querySelector<HTMLElement>('[data-texto]')!;
+    const estado = document.getElementById('form-estado')!;
+    const plantillaError = document.getElementById('plantilla-error-servidor') as HTMLTemplateElement;
+    const controles = [...form.querySelectorAll<Control>('input:not([name="website"]), select, textarea')];
 
-  function mostrarError(control: Control, mensaje: string) {
-    const salida = document.getElementById(`${control.id}-error`);
-    if (salida) salida.textContent = mensaje;
-    control.setAttribute('aria-invalid', mensaje ? 'true' : 'false');
-  }
+    leerUtm(); // guarda los UTM en la sesión al cargar
 
-  function validar(): boolean {
-    let primero: Control | undefined;
-    for (const control of controles) {
-      const mensaje = mensajeDeError(control);
-      mostrarError(control, mensaje);
-      if (mensaje && !primero) primero = control;
+    function mensajeDeError(control: Control): string {
+      const v = control.validity;
+      if (v.valueMissing) return control.type === 'checkbox' ? 'Necesitamos tu autorización para contactarte.' : 'Este campo es obligatorio.';
+      if (v.typeMismatch) return 'Ingresa un correo válido.';
+      if (v.patternMismatch) return 'Ingresa un número de teléfono válido.';
+      if (v.tooShort) return `Escribe al menos ${(control as HTMLInputElement).minLength} caracteres.`;
+      if (v.tooLong) return 'El texto es demasiado largo.';
+      return '';
     }
-    primero?.focus();
-    return !primero;
-  }
 
-  // Revalida un campo en cuanto el usuario lo corrige.
-  for (const control of controles) {
-    control.addEventListener('input', () => {
-      if (control.getAttribute('aria-invalid') === 'true') mostrarError(control, mensajeDeError(control));
+    function mostrarError(control: Control, mensaje: string) {
+      const salida = document.getElementById(`${control.id}-error`);
+      if (salida) salida.textContent = mensaje;
+      control.setAttribute('aria-invalid', mensaje ? 'true' : 'false');
+    }
+
+    function validar(): boolean {
+      let primero: Control | undefined;
+      for (const control of controles) {
+        const mensaje = mensajeDeError(control);
+        mostrarError(control, mensaje);
+        if (mensaje && !primero) primero = control;
+      }
+      primero?.focus();
+      return !primero;
+    }
+
+    // Revalida un campo en cuanto el usuario lo corrige.
+    for (const control of controles) {
+      control.addEventListener('input', () => {
+        if (control.getAttribute('aria-invalid') === 'true') mostrarError(control, mensajeDeError(control));
+      });
+    }
+
+    function leerLead(): Lead {
+      const datos = new FormData(form);
+      const texto = (campo: string) => String(datos.get(campo) ?? '').trim();
+      return {
+        nombre: texto('nombre'),
+        email: texto('email'),
+        telefono: texto('telefono'),
+        empresa: texto('empresa') || undefined,
+        servicio: texto('servicio') as Lead['servicio'],
+        presupuesto: texto('presupuesto') || undefined,
+        mensaje: texto('mensaje'),
+        consentimiento: true,
+        origen: 'landing',
+        utm: leerUtm(),
+      };
+    }
+
+    function mensajeWhatsapp(lead: Lead): string {
+      const servicio = form.querySelector<HTMLSelectElement>('#servicio')!.selectedOptions[0]?.text ?? lead.servicio;
+      return [
+        `Hola, soy ${lead.nombre}${lead.empresa ? ` de ${lead.empresa}` : ''}.`,
+        `Me interesa: ${servicio}.`,
+        lead.presupuesto && `Presupuesto: ${lead.presupuesto}.`,
+        lead.mensaje,
+        `Correo: ${lead.email} · Teléfono: ${lead.telefono}`,
+      ]
+        .filter(Boolean)
+        .join('\n');
+    }
+
+    function setEnviando(enviando: boolean) {
+      boton.disabled = enviando;
+      textoBoton.textContent = enviando ? 'Enviando…' : 'Enviar y recibir propuesta';
+    }
+
+    function mostrarEstado(contenido: string | Node) {
+      estado.replaceChildren(contenido);
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      estado.replaceChildren();
+      if (!validar()) return;
+
+      // Si un bot llenó la trampa, fingimos éxito sin enviar nada.
+      if ((form.elements.namedItem('website') as HTMLInputElement).value) {
+        navigate('/gracias');
+        return;
+      }
+
+      const lead = leerLead();
+      setEnviando(true);
+      const resultado = await enviarLead(lead);
+
+      if (resultado.ok) {
+        track('generate_lead', { servicio: lead.servicio });
+        navigate('/gracias');
+        return;
+      }
+
+      setEnviando(false);
+      if (resultado.tipo === 'validacion') {
+        const errores = Object.entries(resultado.errores) as [CampoLead, string][];
+        for (const [campo, mensaje] of errores) {
+          const control = controles.find((c) => c.name === campo);
+          if (control) mostrarError(control, mensaje);
+        }
+        mostrarEstado(errores.length ? 'Revisa los campos marcados.' : 'Revisa los datos e intenta de nuevo.');
+      } else if (resultado.tipo === 'limite') {
+        mostrarEstado('Recibimos varios envíos seguidos. Intenta de nuevo en unos minutos.');
+      } else {
+        const aviso = plantillaError.content.cloneNode(true) as DocumentFragment;
+        aviso.querySelector('a')!.href = whatsappUrl(PUBLIC_WHATSAPP_NUMBER, mensajeWhatsapp(lead));
+        mostrarEstado(aviso);
+      }
     });
   }
-
-  function leerLead(): Lead {
-    const datos = new FormData(form);
-    const texto = (campo: string) => String(datos.get(campo) ?? '').trim();
-    return {
-      nombre: texto('nombre'),
-      email: texto('email'),
-      telefono: texto('telefono'),
-      empresa: texto('empresa') || undefined,
-      servicio: texto('servicio') as Lead['servicio'],
-      presupuesto: texto('presupuesto') || undefined,
-      mensaje: texto('mensaje'),
-      consentimiento: true,
-      origen: 'landing',
-      utm: leerUtm(),
-    };
-  }
-
-  function mensajeWhatsapp(lead: Lead): string {
-    const servicio = form.querySelector<HTMLSelectElement>('#servicio')!.selectedOptions[0]?.text ?? lead.servicio;
-    return [
-      `Hola, soy ${lead.nombre}${lead.empresa ? ` de ${lead.empresa}` : ''}.`,
-      `Me interesa: ${servicio}.`,
-      lead.presupuesto && `Presupuesto: ${lead.presupuesto}.`,
-      lead.mensaje,
-      `Correo: ${lead.email} · Teléfono: ${lead.telefono}`,
-    ]
-      .filter(Boolean)
-      .join('\n');
-  }
-
-  function setEnviando(enviando: boolean) {
-    boton.disabled = enviando;
-    textoBoton.textContent = enviando ? 'Enviando…' : 'Enviar y recibir propuesta';
-  }
-
-  function mostrarEstado(contenido: string | Node) {
-    estado.replaceChildren(contenido);
-  }
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    estado.replaceChildren();
-    if (!validar()) return;
-
-    // Si un bot llenó la trampa, fingimos éxito sin enviar nada.
-    if ((form.elements.namedItem('website') as HTMLInputElement).value) {
-      location.assign('/gracias');
-      return;
-    }
-
-    const lead = leerLead();
-    setEnviando(true);
-    const resultado = await enviarLead(lead);
-
-    if (resultado.ok) {
-      track('generate_lead', { servicio: lead.servicio });
-      location.assign('/gracias');
-      return;
-    }
-
-    setEnviando(false);
-    if (resultado.tipo === 'validacion') {
-      const errores = Object.entries(resultado.errores) as [CampoLead, string][];
-      for (const [campo, mensaje] of errores) {
-        const control = controles.find((c) => c.name === campo);
-        if (control) mostrarError(control, mensaje);
-      }
-      mostrarEstado(errores.length ? 'Revisa los campos marcados.' : 'Revisa los datos e intenta de nuevo.');
-    } else if (resultado.tipo === 'limite') {
-      mostrarEstado('Recibimos varios envíos seguidos. Intenta de nuevo en unos minutos.');
-    } else {
-      const aviso = plantillaError.content.cloneNode(true) as DocumentFragment;
-      aviso.querySelector('a')!.href = whatsappUrl(PUBLIC_WHATSAPP_NUMBER, mensajeWhatsapp(lead));
-      mostrarEstado(aviso);
-    }
-  });
 
   // Los botones "Elegir paquete" de la sección de precios precargan el formulario.
   document.addEventListener('click', (e) => {
     const enlace = (e.target as HTMLElement).closest<HTMLElement>('[data-elegir-servicio]');
-    if (!enlace) return;
-    const servicio = form.querySelector<HTMLSelectElement>('#servicio')!;
-    const mensaje = form.querySelector<HTMLTextAreaElement>('#mensaje')!;
+    const servicio = document.querySelector<HTMLSelectElement>('#form-contacto #servicio');
+    const mensaje = document.querySelector<HTMLTextAreaElement>('#form-contacto #mensaje');
+    if (!enlace || !servicio || !mensaje) return;
     servicio.value = enlace.dataset.elegirServicio ?? '';
     if (!mensaje.value.trim()) mensaje.value = `Me interesa el paquete ${enlace.dataset.elegirPaquete} de ${servicio.selectedOptions[0]?.text}. `;
     // Dispara la revalidación por si el campo mostraba un error de un intento anterior.

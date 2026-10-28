@@ -8,8 +8,8 @@ import Section from '../ui/Section.astro';
   testimoniosVisibles.length > 0 && (
     <Section id="testimonios" fondo="alterno" eyebrow="Testimonios" titulo="Lo que dicen nuestros clientes">
       <ul class="grid gap-6 md:grid-cols-3">
-        {testimoniosVisibles.map((t) => (
-          <li>
+        {testimoniosVisibles.map((t, i) => (
+          <li data-reveal style={`--reveal-delay: ${i * 100}ms`}>
             <figure class="relative flex h-full flex-col rounded-card border border-line bg-white p-6">
               {t.ejemplo && <span class="absolute top-3 right-3 rounded-full bg-danger/10 px-2 py-0.5 text-[10px] font-bold text-danger uppercase">Ejemplo</span>}
               <div class="flex gap-0.5 text-[#f5b301]" role="img" aria-label="5 de 5 estrellas">

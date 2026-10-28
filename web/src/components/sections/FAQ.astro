@@ -5,7 +5,7 @@ import Section from '../ui/Section.astro';
 ---
 
 <Section id="preguntas" eyebrow="Preguntas frecuentes" titulo="Resolvemos tus dudas">
-  <div class="mx-auto max-w-3xl divide-y divide-line rounded-card border border-line bg-white">
+  <div class="mx-auto max-w-3xl divide-y divide-line rounded-card border border-line bg-white" data-reveal>
     {
       faq.map((item) => (
         <details class="group px-6 py-5 [&_summary::-webkit-details-marker]:hidden">

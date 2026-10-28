@@ -13,7 +13,7 @@ const fondos = ['from-brand to-brand-strong', 'from-accent to-accent-strong', 'f
     <Section id="portafolio" eyebrow="Portafolio" titulo="Proyectos que ya están vendiendo">
       <ul class="grid gap-6 md:grid-cols-3">
         {portafolioVisible.map((p, i) => (
-          <li class="flex flex-col overflow-hidden rounded-card border border-line bg-white">
+          <li data-reveal style={`--reveal-delay: ${i * 100}ms`} class="group flex flex-col overflow-hidden rounded-card border border-line bg-white transition hover:-translate-y-1 hover:shadow-xl hover:shadow-brand/10">
             <div class:list={['relative flex aspect-[16/10] items-end bg-linear-to-br p-5 text-white', fondos[i % fondos.length]]}>
               {p.ejemplo && <span class="absolute top-3 right-3 rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-bold text-danger uppercase">Ejemplo · solo en desarrollo</span>}
               <span class="rounded-full bg-white/15 px-3 py-1 text-xs font-semibold backdrop-blur">{nombreServicio(p.servicio)}</span>

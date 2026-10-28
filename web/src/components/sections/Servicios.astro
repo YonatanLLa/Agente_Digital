@@ -7,9 +7,9 @@ import Section from '../ui/Section.astro';
 <Section id="servicios" eyebrow="Servicios" titulo="Todo lo que tu negocio necesita para vender en internet" intro="Desde tu primera landing hasta el sistema que ordena tu empresa. Un solo equipo, precios claros en soles.">
   <ul class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
     {
-      servicios.map((s) => (
-        <li class="group flex flex-col rounded-card border border-line bg-white p-6 transition hover:-translate-y-1 hover:border-brand/40 hover:shadow-xl hover:shadow-brand/10">
-          <span class="flex size-12 items-center justify-center rounded-xl bg-brand-soft text-brand">
+      servicios.map((s, i) => (
+        <li data-reveal style={`--reveal-delay: ${i * 80}ms`} class="group flex flex-col rounded-card border border-line bg-white p-6 transition hover:-translate-y-1 hover:border-brand/40 hover:shadow-xl hover:shadow-brand/10">
+          <span class="flex size-12 items-center justify-center rounded-xl bg-brand-soft text-brand transition group-hover:bg-brand group-hover:text-white">
             <Icon nombre={s.icono} />
           </span>
           <h3 class="mt-5 text-lg font-bold">{s.nombre}</h3>
@@ -23,7 +23,7 @@ import Section from '../ui/Section.astro';
         </li>
       ))
     }
-    <li class="flex flex-col justify-between rounded-card bg-ink p-6 text-white">
+    <li data-reveal style={`--reveal-delay: ${servicios.length * 80}ms`} class="flex flex-col justify-between rounded-card bg-ink p-6 text-white">
       <div>
         <span class="flex size-12 items-center justify-center rounded-xl bg-white/10 text-accent">
           <Icon nombre="soporte" />
