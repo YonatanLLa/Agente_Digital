@@ -1,0 +1,23 @@
+---
+import { beneficios } from '../../data/beneficios';
+import Icon from '../ui/Icon.astro';
+import Section from '../ui/Section.astro';
+---
+
+<Section id="beneficios" fondo="alterno" eyebrow="Por qué elegirnos" titulo="Hecho para negocios peruanos">
+  <ul class="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      beneficios.map((b) => (
+        <li class="flex gap-4">
+          <span class="flex size-11 shrink-0 items-center justify-center rounded-xl bg-white text-brand shadow-sm ring-1 ring-line">
+            <Icon nombre={b.icono} class="size-5" />
+          </span>
+          <div>
+            <h3 class="font-bold">{b.titulo}</h3>
+            <p class="mt-1 text-sm text-ink-soft">{b.descripcion}</p>
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+</Section>

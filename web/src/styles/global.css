@@ -1,0 +1,67 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/plus-jakarta-sans';
+
+/* Tokens de marca: cambiar aquí para rediseñar toda la web. */
+@theme {
+  --font-sans: 'Plus Jakarta Sans Variable', ui-sans-serif, system-ui, sans-serif;
+
+  --color-ink: #0e1326;
+  --color-ink-soft: #4a5068;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f5f5fa;
+  --color-line: #e3e4ee;
+
+  --color-brand: #5536e8;
+  --color-brand-strong: #4024c9;
+  --color-brand-soft: #ece8ff;
+  --color-accent: #00b39a;
+  --color-accent-strong: #00806e;
+  --color-accent-soft: #dcf7f2;
+
+  --color-whatsapp: #25d366;
+  --color-danger: #c62828;
+
+  --radius-card: 1.25rem;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    @apply bg-surface font-sans text-ink antialiased;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-brand;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .eyebrow {
+    @apply text-sm font-semibold tracking-wider text-brand uppercase;
+  }
+
+  .heading-section {
+    @apply text-3xl font-extrabold tracking-tight text-balance sm:text-4xl;
+  }
+}

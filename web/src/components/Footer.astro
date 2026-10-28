@@ -1,0 +1,55 @@
+---
+import { navegacion, site } from '../data/site';
+import { servicios } from '../data/servicios';
+import { whatsappUrl } from '../lib/whatsapp';
+import Logo from './Logo.astro';
+import Icon from './ui/Icon.astro';
+
+const anio = new Date().getFullYear();
+---
+
+<footer class="bg-ink text-white/70">
+  <div class="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="sm:col-span-2 lg:col-span-1">
+      <Logo claro />
+      <p class="mt-4 max-w-xs text-sm">{site.eslogan}. Desde {site.ciudad} para todo el Perú.</p>
+      <ul class="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-sm">
+        {site.redes.map((red) => <li><a href={red.url} target="_blank" rel="noopener" class="hover:text-white">{red.nombre}</a></li>)}
+      </ul>
+    </div>
+
+    <nav aria-label="Servicios">
+      <h2 class="text-sm font-semibold text-white">Servicios</h2>
+      <ul class="mt-4 space-y-2.5 text-sm">
+        {servicios.map((s) => <li><a href="/#servicios" class="hover:text-white">{s.nombre}</a></li>)}
+      </ul>
+    </nav>
+
+    <nav aria-label="Secciones">
+      <h2 class="text-sm font-semibold text-white">Agencia</h2>
+      <ul class="mt-4 space-y-2.5 text-sm">
+        {navegacion.map((item) => <li><a href={item.href} class="hover:text-white">{item.label}</a></li>)}
+        <li><a href="/#contacto" class="hover:text-white">Contacto</a></li>
+      </ul>
+    </nav>
+
+    <div>
+      <h2 class="text-sm font-semibold text-white">Contacto</h2>
+      <ul class="mt-4 space-y-3 text-sm">
+        <li class="flex items-center gap-2"><Icon nombre="correo" class="size-4 shrink-0" /><a href={`mailto:${site.email}`} class="hover:text-white">{site.email}</a></li>
+        <li class="flex items-center gap-2"><Icon nombre="whatsapp" class="size-4 shrink-0" /><a href={whatsappUrl(site.whatsapp)} target="_blank" rel="noopener" data-whatsapp="footer" class="hover:text-white">{site.telefono}</a></li>
+        <li class="flex items-center gap-2"><Icon nombre="ubicacion" class="size-4 shrink-0" />{site.ciudad}, Perú</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="border-t border-white/10">
+    <div class="container-page flex flex-col gap-3 py-6 text-xs sm:flex-row sm:items-center sm:justify-between">
+      <p>© {anio} {site.nombre}{site.ruc && ` · RUC ${site.ruc}`}. Todos los derechos reservados.</p>
+      <ul class="flex flex-wrap gap-x-5 gap-y-2">
+        <li><a href="/privacidad" class="hover:text-white">Política de privacidad</a></li>
+        {site.libroReclamacionesUrl && <li><a href={site.libroReclamacionesUrl} class="hover:text-white">Libro de Reclamaciones</a></li>}
+      </ul>
+    </div>
+  </div>
+</footer>

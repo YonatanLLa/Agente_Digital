@@ -1,0 +1,20 @@
+---
+import { proceso } from '../../data/proceso';
+import Section from '../ui/Section.astro';
+---
+
+<Section id="proceso" eyebrow="Cómo trabajamos" titulo="Un proceso simple, de la idea a tu web publicada" intro="Sabes en todo momento qué estamos haciendo, cuánto cuesta y cuándo se entrega.">
+  <ol class="relative mx-auto grid max-w-4xl gap-4 sm:grid-cols-2">
+    {
+      proceso.map((paso, i) => (
+        <li class:list={['flex gap-4 rounded-card border border-line bg-white p-5', i === proceso.length - 1 && 'sm:col-span-2 sm:mx-auto sm:max-w-md']}>
+          <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-brand text-sm font-extrabold text-white">{i + 1}</span>
+          <div>
+            <h3 class="font-bold">{paso.titulo}</h3>
+            <p class="mt-1 text-sm text-ink-soft">{paso.descripcion}</p>
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+</Section>

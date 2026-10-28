@@ -1,0 +1,45 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+type Variante = 'primario' | 'secundario' | 'whatsapp' | 'claro';
+
+type Props = {
+  variante?: Variante;
+  tamano?: 'md' | 'lg';
+  href?: string;
+} & HTMLAttributes<'a'> &
+  HTMLAttributes<'button'>;
+
+const { variante = 'primario', tamano = 'md', href, class: className, ...rest } = Astro.props;
+
+const variantes: Record<Variante, string> = {
+  primario: 'bg-brand text-white shadow-lg shadow-brand/25 hover:bg-brand-strong',
+  secundario: 'border border-line bg-white text-ink hover:border-brand hover:text-brand',
+  whatsapp: 'bg-whatsapp text-ink hover:brightness-95',
+  claro: 'bg-white text-brand-strong hover:bg-brand-soft',
+};
+
+const tamanos = {
+  md: 'px-5 py-2.5 text-sm',
+  lg: 'px-7 py-3.5 text-base',
+};
+
+const clases = [
+  'inline-flex items-center justify-center gap-2 rounded-full font-semibold whitespace-nowrap transition disabled:cursor-not-allowed disabled:opacity-60',
+  variantes[variante],
+  tamanos[tamano],
+  className,
+];
+---
+
+{
+  href ? (
+    <a href={href} class:list={clases} {...rest}>
+      <slot />
+    </a>
+  ) : (
+    <button class:list={clases} {...rest}>
+      <slot />
+    </button>
+  )
+}

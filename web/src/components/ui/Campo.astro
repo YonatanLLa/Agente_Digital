@@ -1,0 +1,19 @@
+---
+// Etiqueta + control (slot) + mensaje de error. El control debe usar id={id} y aria-describedby={`${id}-error`}.
+interface Props {
+  id: string;
+  label: string;
+  opcional?: boolean;
+  class?: string;
+}
+
+const { id, label, opcional = false, class: className } = Astro.props;
+---
+
+<div class={className}>
+  <label for={id} class="mb-1.5 block text-sm font-semibold">
+    {label}{opcional && <span class="font-normal text-ink-soft"> (opcional)</span>}
+  </label>
+  <slot />
+  <p id={`${id}-error`} class="mt-1.5 text-sm text-danger empty:hidden" data-error></p>
+</div>

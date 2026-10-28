@@ -1,0 +1,14 @@
+# agente-db y agente-api se agregan en el paso 3 del roadmap (API NestJS).
+services:
+  agente-web:
+    build:
+      context: ./web
+      args:
+        PUBLIC_SITE_URL: ${PUBLIC_SITE_URL:-http://localhost:8080}
+        PUBLIC_WHATSAPP_NUMBER: ${PUBLIC_WHATSAPP_NUMBER:?Define PUBLIC_WHATSAPP_NUMBER en .env}
+        PUBLIC_API_URL: ${PUBLIC_API_URL:-}
+        PUBLIC_GA_ID: ${PUBLIC_GA_ID:-}
+    container_name: agente-web
+    restart: unless-stopped
+    ports:
+      - "${WEB_PORT:-8080}:80"

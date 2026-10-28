@@ -1,0 +1,42 @@
+---
+import { formatoSoles, mensualidades, servicios } from '../../data/servicios';
+import Icon from '../ui/Icon.astro';
+import Section from '../ui/Section.astro';
+---
+
+<Section id="servicios" eyebrow="Servicios" titulo="Todo lo que tu negocio necesita para vender en internet" intro="Desde tu primera landing hasta el sistema que ordena tu empresa. Un solo equipo, precios claros en soles.">
+  <ul class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      servicios.map((s) => (
+        <li class="group flex flex-col rounded-card border border-line bg-white p-6 transition hover:-translate-y-1 hover:border-brand/40 hover:shadow-xl hover:shadow-brand/10">
+          <span class="flex size-12 items-center justify-center rounded-xl bg-brand-soft text-brand">
+            <Icon nombre={s.icono} />
+          </span>
+          <h3 class="mt-5 text-lg font-bold">{s.nombre}</h3>
+          <p class="mt-2 text-sm text-ink-soft">{s.resumen}</p>
+          <ul class="mt-4 space-y-2 text-sm">
+            {s.puntos.map((p) => <li class="flex gap-2"><Icon nombre="check" class="mt-0.5 size-4 shrink-0 text-accent" />{p}</li>)}
+          </ul>
+          <p class="mt-auto pt-6 text-sm text-ink-soft">
+            Desde <span class="text-xl font-extrabold text-ink">{formatoSoles(s.desde)}</span>
+          </p>
+        </li>
+      ))
+    }
+    <li class="flex flex-col justify-between rounded-card bg-ink p-6 text-white">
+      <div>
+        <span class="flex size-12 items-center justify-center rounded-xl bg-white/10 text-accent">
+          <Icon nombre="soporte" />
+        </span>
+        <h3 class="mt-5 text-lg font-bold">Planes mensuales</h3>
+        <p class="mt-2 text-sm text-white/70">Mantén tu web segura, actualizada y atrayendo clientes.</p>
+        <ul class="mt-4 space-y-2 text-sm">
+          {mensualidades.incluye.map((p) => <li class="flex gap-2"><Icon nombre="check" class="mt-0.5 size-4 shrink-0 text-accent" />{p}</li>)}
+        </ul>
+      </div>
+      <p class="pt-6 text-sm text-white/70">
+        De <span class="text-xl font-extrabold text-white">{formatoSoles(mensualidades.desde)}</span> a {formatoSoles(mensualidades.hasta)} / mes
+      </p>
+    </li>
+  </ul>
+</Section>

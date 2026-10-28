@@ -1,0 +1,57 @@
+---
+import { site } from '../data/site';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Plantilla base según la Ley N.° 29733 y su reglamento. Revisar con un abogado antes de publicar.
+const actualizado = '28 de octubre de 2026';
+---
+
+<BaseLayout title="Política de privacidad" description={`Cómo ${site.nombre} trata los datos personales que nos envías.`}>
+  <article class="container-page max-w-3xl py-16 sm:py-20">
+    <p class="eyebrow">Legal</p>
+    <h1 class="mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl">Política de privacidad</h1>
+    <p class="mt-3 text-sm text-ink-soft">Última actualización: {actualizado}</p>
+
+    <div class="mt-10 space-y-8 leading-relaxed text-ink-soft [&_h2]:text-xl [&_h2]:font-bold [&_h2]:text-ink [&_li]:ml-5 [&_li]:list-disc [&_p]:mt-3 [&_ul]:mt-3 [&_ul]:space-y-1">
+      <section>
+        <h2>1. Responsable del tratamiento</h2>
+        <p>{site.nombre}{site.ruc && ` (RUC ${site.ruc})`}, con domicilio en {site.ciudad}, Perú, es responsable de los datos personales que nos envías por este sitio web. Puedes escribirnos a <a href={`mailto:${site.email}`} class="font-semibold text-brand">{site.email}</a>.</p>
+      </section>
+
+      <section>
+        <h2>2. Datos que recopilamos</h2>
+        <p>Cuando llenas el formulario de contacto recopilamos: nombre, correo, celular, empresa (opcional), servicio de interés, presupuesto (opcional) y el mensaje que escribas. También registramos de qué campaña llegaste (parámetros UTM) y, si está activa, información de navegación anónima mediante Google Analytics.</p>
+      </section>
+
+      <section>
+        <h2>3. Para qué los usamos</h2>
+        <ul>
+          <li>Responder tu solicitud y enviarte una propuesta comercial.</li>
+          <li>Contactarte por correo, llamada o WhatsApp sobre esa solicitud.</li>
+          <li>Medir qué canales de publicidad funcionan mejor.</li>
+        </ul>
+        <p>No vendemos ni cedemos tus datos a terceros para fines publicitarios.</p>
+      </section>
+
+      <section>
+        <h2>4. Base legal y consentimiento</h2>
+        <p>Tratamos tus datos con tu consentimiento libre, previo, expreso e informado, que otorgas al marcar la casilla del formulario, conforme a la Ley N.° 29733, Ley de Protección de Datos Personales, y su reglamento.</p>
+      </section>
+
+      <section>
+        <h2>5. Dónde se guardan y por cuánto tiempo</h2>
+        <p>Los datos se almacenan en el banco de datos de clientes potenciales de {site.nombre}, alojado en servidores de proveedores de infraestructura que cumplen estándares de seguridad. Los conservamos mientras dure la relación comercial o hasta que pidas su eliminación, y como máximo dos años desde tu último contacto.</p>
+      </section>
+
+      <section>
+        <h2>6. Tus derechos</h2>
+        <p>Puedes ejercer tus derechos de acceso, rectificación, cancelación y oposición (ARCO) escribiendo a <a href={`mailto:${site.email}`} class="font-semibold text-brand">{site.email}</a> con el asunto «Datos personales». Responderemos en los plazos que establece la ley. Si consideras que no atendimos tu pedido, puedes acudir a la Autoridad Nacional de Protección de Datos Personales.</p>
+      </section>
+
+      <section>
+        <h2>7. Cambios a esta política</h2>
+        <p>Si actualizamos esta política publicaremos la nueva versión en esta página con su fecha de actualización.</p>
+      </section>
+    </div>
+  </article>
+</BaseLayout>

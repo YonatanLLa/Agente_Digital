@@ -1,0 +1,23 @@
+---
+interface Props {
+  id: string;
+  eyebrow?: string;
+  titulo: string;
+  intro?: string;
+  fondo?: 'claro' | 'alterno';
+  class?: string;
+}
+
+const { id, eyebrow, titulo, intro, fondo = 'claro', class: className } = Astro.props;
+---
+
+<section id={id} aria-labelledby={`${id}-titulo`} class:list={['py-20 sm:py-24', fondo === 'alterno' && 'bg-surface-alt', className]}>
+  <div class="container-page">
+    <header class="mx-auto mb-12 max-w-2xl text-center">
+      {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+      <h2 id={`${id}-titulo`} class="heading-section mt-2">{titulo}</h2>
+      {intro && <p class="mt-4 text-lg text-pretty text-ink-soft">{intro}</p>}
+    </header>
+    <slot />
+  </div>
+</section>

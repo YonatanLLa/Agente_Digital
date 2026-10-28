@@ -1,0 +1,66 @@
+---
+import { navegacion } from '../data/site';
+import Logo from './Logo.astro';
+import Button from './ui/Button.astro';
+import Icon from './ui/Icon.astro';
+---
+
+<header class="sticky top-0 z-40 border-b border-line/70 bg-white/85 backdrop-blur-md">
+  <div class="container-page flex h-16 items-center justify-between gap-4">
+    <Logo />
+
+    <nav aria-label="Principal" class="hidden md:block">
+      <ul class="flex items-center gap-7 text-sm font-medium text-ink-soft">
+        {navegacion.map((item) => <li><a href={item.href} class="transition hover:text-brand">{item.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <div class="hidden sm:block"><Button href="/#contacto">Cotiza gratis</Button></div>
+      <button
+        type="button"
+        id="menu-boton"
+        class="inline-flex size-10 items-center justify-center rounded-full text-ink hover:bg-surface-alt md:hidden"
+        aria-expanded="false"
+        aria-controls="menu-movil"
+        aria-label="Abrir menú"
+      >
+        <span data-icono="abrir"><Icon nombre="menu" /></span>
+        <span data-icono="cerrar" hidden><Icon nombre="cerrar" /></span>
+      </button>
+    </div>
+  </div>
+
+  <nav id="menu-movil" aria-label="Principal (móvil)" class="border-t border-line bg-white md:hidden" hidden>
+    <ul class="container-page flex flex-col py-3 text-base font-medium">
+      {navegacion.map((item) => <li><a href={item.href} class="block rounded-lg px-2 py-3 hover:bg-surface-alt">{item.label}</a></li>)}
+      <li class="pt-2 pb-1"><Button href="/#contacto" class="w-full">Cotiza gratis</Button></li>
+    </ul>
+  </nav>
+</header>
+
+<script>
+  const boton = document.getElementById('menu-boton')!;
+  const menu = document.getElementById('menu-movil')!;
+  const iconoAbrir = boton.querySelector<HTMLElement>('[data-icono="abrir"]')!;
+  const iconoCerrar = boton.querySelector<HTMLElement>('[data-icono="cerrar"]')!;
+
+  function setAbierto(abierto: boolean) {
+    menu.hidden = !abierto;
+    boton.setAttribute('aria-expanded', String(abierto));
+    boton.setAttribute('aria-label', abierto ? 'Cerrar menú' : 'Abrir menú');
+    iconoAbrir.hidden = abierto;
+    iconoCerrar.hidden = !abierto;
+  }
+
+  boton.addEventListener('click', () => setAbierto(boton.getAttribute('aria-expanded') !== 'true'));
+  menu.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).closest('a')) setAbierto(false);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !menu.hidden) {
+      setAbierto(false);
+      boton.focus();
+    }
+  });
+</script>

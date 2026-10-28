@@ -1,0 +1,245 @@
+---
+import { site } from '../../data/site';
+import { servicios } from '../../data/servicios';
+import { whatsappUrl } from '../../lib/whatsapp';
+import Button from '../ui/Button.astro';
+import Campo from '../ui/Campo.astro';
+import Icon from '../ui/Icon.astro';
+
+const presupuestos = ['Menos de S/ 1,500', 'S/ 1,500 – 5,000', 'S/ 5,000 – 15,000', 'Más de S/ 15,000', 'Aún no lo sé'];
+const control = 'block w-full rounded-xl border border-line bg-white px-4 py-3 text-base text-ink placeholder:text-ink-soft/60 focus:border-brand focus:ring-2 focus:ring-brand/20 focus:outline-none aria-invalid:border-danger';
+---
+
+<section id="contacto" aria-labelledby="contacto-titulo" class="bg-linear-to-br from-brand-strong via-brand to-[#6d4ff0] py-20 text-white sm:py-24">
+  <div class="container-page grid gap-12 lg:grid-cols-[1fr_1.15fr] lg:items-start">
+    <div>
+      <p class="text-sm font-semibold tracking-wider text-white/80 uppercase">Contacto</p>
+      <h2 id="contacto-titulo" class="mt-2 text-3xl font-extrabold tracking-tight text-balance sm:text-4xl">Cuéntanos tu proyecto y recibe una propuesta sin costo</h2>
+      <p class="mt-4 max-w-md text-lg text-white/85">Te respondemos en menos de 24 horas hábiles con los siguientes pasos y un rango de precio.</p>
+
+      <ul class="mt-8 space-y-4">
+        <li>
+          <a href={whatsappUrl(site.whatsapp)} target="_blank" rel="noopener" data-whatsapp="contacto" class="flex items-center gap-3 font-semibold hover:underline">
+            <span class="flex size-11 items-center justify-center rounded-full bg-white/15"><Icon nombre="whatsapp" class="size-5" /></span>
+            {site.telefono}
+          </a>
+        </li>
+        <li>
+          <a href={`mailto:${site.email}`} class="flex items-center gap-3 font-semibold hover:underline">
+            <span class="flex size-11 items-center justify-center rounded-full bg-white/15"><Icon nombre="correo" class="size-5" /></span>
+            {site.email}
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="rounded-card bg-white p-6 text-ink shadow-2xl sm:p-8">
+      <form id="form-contacto" novalidate class="grid gap-5 sm:grid-cols-2">
+        <Campo id="nombre" label="Nombre">
+          <input id="nombre" name="nombre" required minlength="2" maxlength="100" autocomplete="name" aria-describedby="nombre-error" class={control} />
+        </Campo>
+        <Campo id="empresa" label="Empresa" opcional>
+          <input id="empresa" name="empresa" maxlength="100" autocomplete="organization" aria-describedby="empresa-error" class={control} />
+        </Campo>
+        <Campo id="email" label="Correo">
+          <input id="email" name="email" type="email" required maxlength="150" autocomplete="email" aria-describedby="email-error" class={control} />
+        </Campo>
+        <Campo id="telefono" label="Celular / WhatsApp">
+          <input id="telefono" name="telefono" type="tel" required pattern="[0-9 +()\-]{7,20}" autocomplete="tel" placeholder="999 999 999" aria-describedby="telefono-error" class={control} />
+        </Campo>
+        <Campo id="servicio" label="¿Qué necesitas?">
+          <select id="servicio" name="servicio" required aria-describedby="servicio-error" class={control}>
+            <option value="">Elige un servicio</option>
+            {servicios.map((s) => <option value={s.id}>{s.nombre}</option>)}
+            <option value="otro">Otro / no estoy seguro</option>
+          </select>
+        </Campo>
+        <Campo id="presupuesto" label="Presupuesto" opcional>
+          <select id="presupuesto" name="presupuesto" aria-describedby="presupuesto-error" class={control}>
+            <option value="">Selecciona un rango</option>
+            {presupuestos.map((p) => <option value={p}>{p}</option>)}
+          </select>
+        </Campo>
+        <Campo id="mensaje" label="Cuéntanos sobre tu proyecto" class="sm:col-span-2">
+          <textarea id="mensaje" name="mensaje" required minlength="10" maxlength="2000" rows="4" aria-describedby="mensaje-error" class={control} placeholder="Tengo una tienda de… y quiero…"></textarea>
+        </Campo>
+
+        <!-- Trampa para bots: invisible para personas y lectores de pantalla. -->
+        <div class="hidden" aria-hidden="true">
+          <label>No llenar este campo <input name="website" tabindex="-1" autocomplete="off" /></label>
+        </div>
+
+        <div class="sm:col-span-2">
+          <label class="flex items-start gap-3 text-sm text-ink-soft">
+            <input id="consentimiento" name="consentimiento" type="checkbox" required aria-describedby="consentimiento-error" class="mt-0.5 size-5 shrink-0 rounded accent-brand" />
+            <span>Acepto la <a href="/privacidad" class="font-semibold text-brand underline">política de privacidad</a> y que me contacten sobre mi solicitud.</span>
+          </label>
+          <p id="consentimiento-error" class="mt-1.5 text-sm text-danger empty:hidden" data-error></p>
+        </div>
+
+        <div class="sm:col-span-2">
+          <Button type="submit" tamano="lg" class="w-full" id="form-enviar">
+            <span data-texto>Enviar y recibir propuesta</span>
+            <Icon nombre="flecha" class="size-5" />
+          </Button>
+          <div id="form-estado" role="status" aria-live="polite" class="mt-4 empty:hidden"></div>
+        </div>
+      </form>
+      <noscript>
+        <p class="mt-4 text-sm text-ink-soft">Activa JavaScript para enviar el formulario o escríbenos por WhatsApp al {site.telefono}.</p>
+      </noscript>
+    </div>
+  </div>
+</section>
+
+<template id="plantilla-error-servidor">
+  <div class="rounded-xl border border-line bg-surface-alt p-4 text-sm">
+    <p class="font-semibold">No pudimos enviar tu mensaje en este momento.</p>
+    <p class="mt-1 text-ink-soft">Envíanos los mismos datos por WhatsApp y te respondemos igual de rápido.</p>
+    <a data-whatsapp="form-fallback" target="_blank" rel="noopener" class="mt-3 inline-flex items-center gap-2 rounded-full bg-whatsapp px-4 py-2 font-semibold text-ink hover:brightness-95">
+      Enviar por WhatsApp
+    </a>
+  </div>
+</template>
+
+<script>
+  import { PUBLIC_WHATSAPP_NUMBER } from 'astro:env/client';
+  import { track } from '../../lib/analytics';
+  import { enviarLead, leerUtm, type CampoLead, type Lead } from '../../lib/leads';
+  import { whatsappUrl } from '../../lib/whatsapp';
+
+  const form = document.getElementById('form-contacto') as HTMLFormElement;
+  const boton = document.getElementById('form-enviar') as HTMLButtonElement;
+  const textoBoton = boton.querySelector<HTMLElement>('[data-texto]')!;
+  const estado = document.getElementById('form-estado')!;
+  const plantillaError = document.getElementById('plantilla-error-servidor') as HTMLTemplateElement;
+
+  type Control = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+  const controles = [...form.querySelectorAll<Control>('input:not([name="website"]), select, textarea')];
+
+  leerUtm(); // guarda los UTM en la sesión al cargar
+
+  function mensajeDeError(control: Control): string {
+    const v = control.validity;
+    if (v.valueMissing) return control.type === 'checkbox' ? 'Necesitamos tu autorización para contactarte.' : 'Este campo es obligatorio.';
+    if (v.typeMismatch) return 'Ingresa un correo válido.';
+    if (v.patternMismatch) return 'Ingresa un número de teléfono válido.';
+    if (v.tooShort) return `Escribe al menos ${(control as HTMLInputElement).minLength} caracteres.`;
+    if (v.tooLong) return 'El texto es demasiado largo.';
+    return '';
+  }
+
+  function mostrarError(control: Control, mensaje: string) {
+    const salida = document.getElementById(`${control.id}-error`);
+    if (salida) salida.textContent = mensaje;
+    control.setAttribute('aria-invalid', mensaje ? 'true' : 'false');
+  }
+
+  function validar(): boolean {
+    let primero: Control | undefined;
+    for (const control of controles) {
+      const mensaje = mensajeDeError(control);
+      mostrarError(control, mensaje);
+      if (mensaje && !primero) primero = control;
+    }
+    primero?.focus();
+    return !primero;
+  }
+
+  // Revalida un campo en cuanto el usuario lo corrige.
+  for (const control of controles) {
+    control.addEventListener('input', () => {
+      if (control.getAttribute('aria-invalid') === 'true') mostrarError(control, mensajeDeError(control));
+    });
+  }
+
+  function leerLead(): Lead {
+    const datos = new FormData(form);
+    const texto = (campo: string) => String(datos.get(campo) ?? '').trim();
+    return {
+      nombre: texto('nombre'),
+      email: texto('email'),
+      telefono: texto('telefono'),
+      empresa: texto('empresa') || undefined,
+      servicio: texto('servicio') as Lead['servicio'],
+      presupuesto: texto('presupuesto') || undefined,
+      mensaje: texto('mensaje'),
+      consentimiento: true,
+      origen: 'landing',
+      utm: leerUtm(),
+    };
+  }
+
+  function mensajeWhatsapp(lead: Lead): string {
+    const servicio = form.querySelector<HTMLSelectElement>('#servicio')!.selectedOptions[0]?.text ?? lead.servicio;
+    return [
+      `Hola, soy ${lead.nombre}${lead.empresa ? ` de ${lead.empresa}` : ''}.`,
+      `Me interesa: ${servicio}.`,
+      lead.presupuesto && `Presupuesto: ${lead.presupuesto}.`,
+      lead.mensaje,
+      `Correo: ${lead.email} · Teléfono: ${lead.telefono}`,
+    ]
+      .filter(Boolean)
+      .join('\n');
+  }
+
+  function setEnviando(enviando: boolean) {
+    boton.disabled = enviando;
+    textoBoton.textContent = enviando ? 'Enviando…' : 'Enviar y recibir propuesta';
+  }
+
+  function mostrarEstado(contenido: string | Node) {
+    estado.replaceChildren(contenido);
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    estado.replaceChildren();
+    if (!validar()) return;
+
+    // Si un bot llenó la trampa, fingimos éxito sin enviar nada.
+    if ((form.elements.namedItem('website') as HTMLInputElement).value) {
+      location.assign('/gracias');
+      return;
+    }
+
+    const lead = leerLead();
+    setEnviando(true);
+    const resultado = await enviarLead(lead);
+
+    if (resultado.ok) {
+      track('generate_lead', { servicio: lead.servicio });
+      location.assign('/gracias');
+      return;
+    }
+
+    setEnviando(false);
+    if (resultado.tipo === 'validacion') {
+      const errores = Object.entries(resultado.errores) as [CampoLead, string][];
+      for (const [campo, mensaje] of errores) {
+        const control = controles.find((c) => c.name === campo);
+        if (control) mostrarError(control, mensaje);
+      }
+      mostrarEstado(errores.length ? 'Revisa los campos marcados.' : 'Revisa los datos e intenta de nuevo.');
+    } else if (resultado.tipo === 'limite') {
+      mostrarEstado('Recibimos varios envíos seguidos. Intenta de nuevo en unos minutos.');
+    } else {
+      const aviso = plantillaError.content.cloneNode(true) as DocumentFragment;
+      aviso.querySelector('a')!.href = whatsappUrl(PUBLIC_WHATSAPP_NUMBER, mensajeWhatsapp(lead));
+      mostrarEstado(aviso);
+    }
+  });
+
+  // Los botones "Elegir paquete" de la sección de precios precargan el formulario.
+  document.addEventListener('click', (e) => {
+    const enlace = (e.target as HTMLElement).closest<HTMLElement>('[data-elegir-servicio]');
+    if (!enlace) return;
+    const servicio = form.querySelector<HTMLSelectElement>('#servicio')!;
+    const mensaje = form.querySelector<HTMLTextAreaElement>('#mensaje')!;
+    servicio.value = enlace.dataset.elegirServicio ?? '';
+    if (!mensaje.value.trim()) mensaje.value = `Me interesa el paquete ${enlace.dataset.elegirPaquete} de ${servicio.selectedOptions[0]?.text}. `;
+    // Dispara la revalidación por si el campo mostraba un error de un intento anterior.
+    servicio.dispatchEvent(new Event('input'));
+    mensaje.dispatchEvent(new Event('input'));
+  });
+</script>

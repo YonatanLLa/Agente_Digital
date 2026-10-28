@@ -1,0 +1,67 @@
+---
+import Beneficios from '../components/sections/Beneficios.astro';
+import Contacto from '../components/sections/Contacto.astro';
+import FAQ from '../components/sections/FAQ.astro';
+import Hero from '../components/sections/Hero.astro';
+import Paquetes from '../components/sections/Paquetes.astro';
+import Portafolio from '../components/sections/Portafolio.astro';
+import Proceso from '../components/sections/Proceso.astro';
+import Servicios from '../components/sections/Servicios.astro';
+import Testimonios from '../components/sections/Testimonios.astro';
+import { faq } from '../data/faq';
+import { servicios } from '../data/servicios';
+import { site } from '../data/site';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const url = new URL('/', Astro.site).href;
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ProfessionalService',
+    '@id': `${url}#agencia`,
+    name: site.nombre,
+    description: site.descripcion,
+    url,
+    logo: new URL('/favicon.svg', Astro.site).href,
+    image: new URL('/og-image.png', Astro.site).href,
+    email: site.email,
+    telephone: site.telefono,
+    priceRange: 'S/ 900 – S/ 25,000',
+    currenciesAccepted: 'PEN',
+    areaServed: { '@type': 'Country', name: 'Perú' },
+    address: { '@type': 'PostalAddress', addressLocality: site.ciudad, addressCountry: site.pais },
+    sameAs: site.redes.map((r) => r.url),
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'Servicios',
+      itemListElement: servicios.map((s) => ({
+        '@type': 'Offer',
+        itemOffered: { '@type': 'Service', name: s.nombre, description: s.resumen },
+        priceSpecification: { '@type': 'PriceSpecification', minPrice: s.desde, priceCurrency: 'PEN' },
+      })),
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.pregunta,
+      acceptedAnswer: { '@type': 'Answer', text: f.respuesta },
+    })),
+  },
+];
+---
+
+<BaseLayout title={`${site.nombre}: landing pages, webs y ecommerce en Perú`} jsonLd={jsonLd}>
+  <Hero />
+  <Servicios />
+  <Paquetes />
+  <Proceso />
+  <Beneficios />
+  <Portafolio />
+  <Testimonios />
+  <FAQ />
+  <Contacto />
+</BaseLayout>
