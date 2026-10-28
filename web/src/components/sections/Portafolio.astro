@@ -5,7 +5,7 @@ import Icon from '../ui/Icon.astro';
 import Section from '../ui/Section.astro';
 
 const nombreServicio = (id: string) => servicios.find((s) => s.id === id)?.nombre ?? id;
-const fondos = ['from-brand to-brand-strong', 'from-accent to-accent-strong', 'from-ink to-[#2a3157]'];
+const fondos = ['from-brand-strong to-brand-soft', 'from-accent/70 to-accent-soft', 'from-[#2a2a35] to-panel'];
 ---
 
 {
@@ -13,17 +13,18 @@ const fondos = ['from-brand to-brand-strong', 'from-accent to-accent-strong', 'f
     <Section id="portafolio" eyebrow="Portafolio" titulo="Proyectos que ya están vendiendo">
       <ul class="grid gap-6 md:grid-cols-3">
         {portafolioVisible.map((p, i) => (
-          <li data-reveal style={`--reveal-delay: ${i * 100}ms`} class="group flex flex-col overflow-hidden rounded-card border border-line bg-white transition hover:-translate-y-1 hover:shadow-xl hover:shadow-brand/10">
-            <div class:list={['relative flex aspect-[16/10] items-end bg-linear-to-br p-5 text-white', fondos[i % fondos.length]]}>
-              {p.ejemplo && <span class="absolute top-3 right-3 rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-bold text-danger uppercase">Ejemplo · solo en desarrollo</span>}
-              <span class="rounded-full bg-white/15 px-3 py-1 text-xs font-semibold backdrop-blur">{nombreServicio(p.servicio)}</span>
+          <li data-reveal style={`--reveal-delay: ${i * 100}ms`} class="group flex flex-col overflow-hidden rounded-card border border-line bg-panel transition hover:-translate-y-1 hover:border-brand/50">
+            <div class:list={['relative flex aspect-[16/10] items-end border-b border-line bg-linear-to-br p-5 text-white', fondos[i % fondos.length]]}>
+              <div class="rayado absolute inset-0"></div>
+              {p.ejemplo && <span class="absolute top-3 right-3 rounded-[4px] bg-black/70 px-2 py-0.5 font-mono text-[10px] font-bold text-danger uppercase">Ejemplo · solo en desarrollo</span>}
+              <span class="relative rounded-[4px] bg-black/40 px-2.5 py-1 font-mono text-[10px] font-semibold tracking-wider uppercase backdrop-blur">{nombreServicio(p.servicio)}</span>
             </div>
             <div class="flex flex-1 flex-col p-6">
-              <p class="text-xs font-semibold text-ink-soft uppercase">{p.rubro}</p>
+              <p class="font-mono text-xs tracking-wider text-ink-soft uppercase">{p.rubro}</p>
               <h3 class="mt-1 text-lg font-bold">{p.titulo}</h3>
               <p class="mt-2 text-sm text-ink-soft">{p.resumen}</p>
-              <p class="mt-auto flex items-center gap-2 pt-5 text-sm font-semibold text-accent-strong"><Icon nombre="grafico" class="size-4" />{p.resultado}</p>
-              {p.url && <a href={p.url} target="_blank" rel="noopener" class="mt-3 text-sm font-semibold text-brand hover:underline">Ver proyecto</a>}
+              <p class="mt-auto flex items-center gap-2 pt-5 text-sm font-semibold text-accent"><Icon nombre="grafico" class="size-4" />{p.resultado}</p>
+              {p.url && <a href={p.url} target="_blank" rel="noopener" class="link-mono mt-4">Ver proyecto <Icon nombre="chevron" class="size-3.5" /></a>}
             </div>
           </li>
         ))}

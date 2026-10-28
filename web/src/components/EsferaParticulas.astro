@@ -1,0 +1,181 @@
+---
+// Esfera de partículas en canvas (sin librerías), inspirada en el hero de motion.dev.
+// Gira sola, se inclina hacia el puntero, se pausa fuera de pantalla y queda quieta con "reducir movimiento".
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div class:list={['relative aspect-square w-full', className]} aria-hidden="true">
+  <div class="absolute inset-[18%] rounded-full bg-brand/25 blur-3xl"></div>
+  <canvas data-esfera class="absolute inset-0 size-full"></canvas>
+</div>
+
+<script>
+  type Particula = { x: number; y: number; z: number; fase: number; anillo: boolean };
+  type Rgb = [number, number, number];
+
+  let detener: (() => void) | undefined;
+
+  document.addEventListener('astro:page-load', iniciar);
+  document.addEventListener('astro:before-swap', () => detener?.());
+
+  function colorDeToken(nombre: string, respaldo: Rgb): Rgb {
+    const hex = getComputedStyle(document.documentElement).getPropertyValue(nombre).trim();
+    const m = /^#([0-9a-f]{6})$/i.exec(hex);
+    if (!m) return respaldo;
+    const n = parseInt(m[1], 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  }
+
+  function crearParticulas(cantidad: number): Particula[] {
+    const particulas: Particula[] = [];
+    // Esfera: distribución de Fibonacci para que los puntos queden parejos.
+    const aureo = Math.PI * (3 - Math.sqrt(5));
+    for (let i = 0; i < cantidad; i++) {
+      const y = 1 - (i / (cantidad - 1)) * 2;
+      const r = Math.sqrt(1 - y * y);
+      particulas.push({ x: Math.cos(aureo * i) * r, y, z: Math.sin(aureo * i) * r, fase: Math.random() * Math.PI * 2, anillo: false });
+    }
+    // Anillo interior inclinado que gira en sentido contrario.
+    const enAnillo = Math.round(cantidad / 8);
+    for (let i = 0; i < enAnillo; i++) {
+      const a = (i / enAnillo) * Math.PI * 2;
+      particulas.push({ x: Math.cos(a) * 0.62, y: 0, z: Math.sin(a) * 0.62, fase: Math.random() * Math.PI * 2, anillo: true });
+    }
+    return particulas;
+  }
+
+  function iniciar() {
+    detener?.();
+    const canvas = document.querySelector<HTMLCanvasElement>('canvas[data-esfera]');
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx) return;
+
+    const reducido = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const violeta = colorDeToken('--color-brand', [139, 108, 255]);
+    const turquesa = colorDeToken('--color-accent', [46, 230, 200]);
+    const particulas = crearParticulas(innerWidth < 640 ? 1200 : 2400);
+
+    let ancho = 0;
+    let alto = 0;
+    let rotacion = 0;
+    let inclinX = 0;
+    let inclinY = 0;
+    let objetivoX = 0;
+    let objetivoY = 0;
+    let visible = true;
+    let rafId = 0;
+    let anterior = 0;
+
+    const redimensionar = () => {
+      const dpr = Math.min(devicePixelRatio || 1, 2);
+      ancho = canvas.clientWidth;
+      alto = canvas.clientHeight;
+      canvas.width = Math.round(ancho * dpr);
+      canvas.height = Math.round(alto * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      if (reducido) dibujar(0);
+    };
+
+    function dibujar(t: number) {
+      ctx!.clearRect(0, 0, ancho, alto);
+      // Mezcla aditiva: donde se juntan partículas, brillan más.
+      ctx!.globalCompositeOperation = 'lighter';
+      const radio = Math.min(ancho, alto) * 0.4;
+      const cx = ancho / 2;
+      const cy = alto / 2;
+      const foco = radio * 3.2;
+
+      const rx = -0.35 + inclinX;
+      const cosX = Math.cos(rx);
+      const sinX = Math.sin(rx);
+
+      for (const p of particulas) {
+        // El anillo gira al revés y con una inclinación fija; la esfera "respira" un poco.
+        const ry = (p.anillo ? -rotacion * 1.6 : rotacion) + inclinY;
+        const cosY = Math.cos(ry);
+        const sinY = Math.sin(ry);
+        const pulso = p.anillo ? 1 : 1 + Math.sin(t * 0.0012 + p.fase) * 0.025;
+
+        let x = p.x * cosY - p.z * sinY;
+        let z = p.x * sinY + p.z * cosY;
+        let y = p.y;
+        if (p.anillo) {
+          const yi = y * Math.cos(1.1) - z * Math.sin(1.1);
+          z = y * Math.sin(1.1) + z * Math.cos(1.1);
+          y = yi;
+        }
+        const y2 = y * cosX - z * sinX;
+        const z2 = y * sinX + z * cosX;
+        x *= pulso;
+
+        const escala = foco / (foco - z2 * radio);
+        const px = cx + x * radio * escala;
+        const py = cy + y2 * radio * pulso * escala;
+        const profundidad = (z2 + 1) / 2; // 0 = atrás, 1 = adelante
+
+        const mezcla = p.anillo ? 1 : (y2 + 1) / 2;
+        const r = Math.round(violeta[0] + (turquesa[0] - violeta[0]) * mezcla);
+        const g = Math.round(violeta[1] + (turquesa[1] - violeta[1]) * mezcla);
+        const b = Math.round(violeta[2] + (turquesa[2] - violeta[2]) * mezcla);
+        const alfa = 0.18 + profundidad * 0.8;
+        const tam = (p.anillo ? 2.2 : 1.7) * (0.45 + profundidad) * escala;
+
+        ctx!.fillStyle = `rgba(${r},${g},${b},${alfa.toFixed(3)})`;
+        ctx!.fillRect(px - tam / 2, py - tam / 2, tam, tam);
+      }
+    }
+
+    const cuadro = (t: number) => {
+      const dt = anterior ? Math.min(t - anterior, 50) : 16;
+      anterior = t;
+      rotacion += dt * 0.00018;
+      inclinX += (objetivoX - inclinX) * 0.05;
+      inclinY += (objetivoY - inclinY) * 0.05;
+      dibujar(t);
+      rafId = requestAnimationFrame(cuadro);
+    };
+
+    const arrancar = () => {
+      if (reducido || rafId || !visible || document.hidden) return;
+      anterior = 0;
+      rafId = requestAnimationFrame(cuadro);
+    };
+    const pausar = () => {
+      cancelAnimationFrame(rafId);
+      rafId = 0;
+    };
+
+    const alMoverPuntero = (e: PointerEvent) => {
+      const caja = canvas.getBoundingClientRect();
+      objetivoY = ((e.clientX - (caja.left + caja.width / 2)) / innerWidth) * 0.9;
+      objetivoX = ((e.clientY - (caja.top + caja.height / 2)) / innerHeight) * 0.6;
+    };
+    const alCambiarVisibilidad = () => (document.hidden ? pausar() : arrancar());
+
+    const observadorTamano = new ResizeObserver(redimensionar);
+    observadorTamano.observe(canvas);
+    const observadorVista = new IntersectionObserver(([entrada]) => {
+      visible = entrada.isIntersecting;
+      visible ? arrancar() : pausar();
+    });
+    observadorVista.observe(canvas);
+    document.addEventListener('visibilitychange', alCambiarVisibilidad);
+    if (!reducido) addEventListener('pointermove', alMoverPuntero, { passive: true });
+
+    redimensionar();
+    arrancar();
+
+    detener = () => {
+      pausar();
+      observadorTamano.disconnect();
+      observadorVista.disconnect();
+      document.removeEventListener('visibilitychange', alCambiarVisibilidad);
+      removeEventListener('pointermove', alMoverPuntero);
+      detener = undefined;
+    };
+  }
+</script>

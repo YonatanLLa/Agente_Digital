@@ -1,11 +1,5 @@
 ---
 import { site } from '../data/site';
-
-interface Props {
-  claro?: boolean;
-}
-
-const { claro = false } = Astro.props;
 ---
 
 <a href="/" class="inline-flex items-center gap-2.5 font-extrabold tracking-tight" aria-label={`${site.nombre}, ir al inicio`}>
@@ -19,5 +13,5 @@ const { claro = false } = Astro.props;
     <rect width="32" height="32" rx="9" fill="url(#logo-grad)" />
     <path d="M9 23 16 8l7 15M11.8 17.5h8.4" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
   </svg>
-  <span class:list={['text-lg whitespace-nowrap', claro ? 'text-white' : 'text-ink']}>{site.nombre}</span>
+  <span class="text-lg whitespace-nowrap text-ink">{site.nombre}</span>
 </a>

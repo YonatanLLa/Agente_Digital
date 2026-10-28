@@ -7,33 +7,34 @@ import Campo from '../ui/Campo.astro';
 import Icon from '../ui/Icon.astro';
 
 const presupuestos = ['Menos de S/ 1,500', 'S/ 1,500 – 5,000', 'S/ 5,000 – 15,000', 'Más de S/ 15,000', 'Aún no lo sé'];
-const control = 'block w-full rounded-xl border border-line bg-white px-4 py-3 text-base text-ink placeholder:text-ink-soft/60 focus:border-brand focus:ring-2 focus:ring-brand/20 focus:outline-none aria-invalid:border-danger';
+const control = 'block w-full rounded-[4px] border border-line bg-surface px-4 py-3 text-base text-ink placeholder:text-ink-soft/50 focus:border-brand focus:ring-2 focus:ring-brand/25 focus:outline-none aria-invalid:border-danger';
 ---
 
-<section id="contacto" aria-labelledby="contacto-titulo" class="bg-linear-to-br from-brand-strong via-brand to-[#6d4ff0] py-20 text-white sm:py-24">
+<section id="contacto" aria-labelledby="contacto-titulo" class="relative isolate overflow-hidden border-t border-line py-20 sm:py-28">
+  <div class="rayado pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(45rem_30rem_at_15%_30%,rgb(139_108_255/0.18),transparent)]"></div>
   <div class="container-page grid gap-12 lg:grid-cols-[1fr_1.15fr] lg:items-start">
     <div data-reveal>
-      <p class="text-sm font-semibold tracking-wider text-white/80 uppercase">Contacto</p>
-      <h2 id="contacto-titulo" class="mt-2 text-3xl font-extrabold tracking-tight text-balance sm:text-4xl">Cuéntanos tu proyecto y recibe una propuesta sin costo</h2>
-      <p class="mt-4 max-w-md text-lg text-white/85">Te respondemos en menos de 24 horas hábiles con los siguientes pasos y un rango de precio.</p>
+      <p class="eyebrow">Contacto</p>
+      <h2 id="contacto-titulo" class="heading-section mt-4">Cuéntanos tu proyecto y recibe una propuesta sin costo</h2>
+      <p class="mt-6 max-w-md text-lg text-ink-soft">Te respondemos en menos de 24 horas hábiles con los siguientes pasos y un rango de precio.</p>
 
-      <ul class="mt-8 space-y-4">
+      <ul class="mt-10 space-y-3">
         <li>
-          <a href={whatsappUrl(site.whatsapp)} target="_blank" rel="noopener" data-whatsapp="contacto" class="flex items-center gap-3 font-semibold hover:underline">
-            <span class="flex size-11 items-center justify-center rounded-full bg-white/15"><Icon nombre="whatsapp" class="size-5" /></span>
+          <a href={whatsappUrl(site.whatsapp)} target="_blank" rel="noopener" data-whatsapp="contacto" class="flex items-center gap-3 font-mono text-sm transition hover:text-accent">
+            <span class="flex size-11 items-center justify-center rounded-[4px] border border-line bg-panel text-whatsapp"><Icon nombre="whatsapp" class="size-5" /></span>
             {site.telefono}
           </a>
         </li>
         <li>
-          <a href={`mailto:${site.email}`} class="flex items-center gap-3 font-semibold hover:underline">
-            <span class="flex size-11 items-center justify-center rounded-full bg-white/15"><Icon nombre="correo" class="size-5" /></span>
+          <a href={`mailto:${site.email}`} class="flex items-center gap-3 font-mono text-sm transition hover:text-accent">
+            <span class="flex size-11 items-center justify-center rounded-[4px] border border-line bg-panel text-accent"><Icon nombre="correo" class="size-5" /></span>
             {site.email}
           </a>
         </li>
       </ul>
     </div>
 
-    <div class="rounded-card bg-white p-6 text-ink shadow-2xl sm:p-8" data-reveal style="--reveal-delay: 150ms">
+    <div class="rounded-card border border-line bg-panel p-6 shadow-2xl shadow-black/50 sm:p-8" data-reveal style="--reveal-delay: 150ms">
       <form id="form-contacto" novalidate class="grid gap-5 sm:grid-cols-2">
         <Campo id="nombre" label="Nombre">
           <input id="nombre" name="nombre" required minlength="2" maxlength="100" autocomplete="name" aria-describedby="nombre-error" class={control} />
@@ -45,7 +46,7 @@ const control = 'block w-full rounded-xl border border-line bg-white px-4 py-3 t
           <input id="email" name="email" type="email" required maxlength="150" autocomplete="email" aria-describedby="email-error" class={control} />
         </Campo>
         <Campo id="telefono" label="Celular / WhatsApp">
-          <input id="telefono" name="telefono" type="tel" required pattern="[0-9 +()\-]{7,20}" autocomplete="tel" placeholder="999 999 999" aria-describedby="telefono-error" class={control} />
+          <input id="telefono" name="telefono" type="tel" required pattern="[0-9 +\(\)\-]{7,20}" autocomplete="tel" placeholder="999 999 999" aria-describedby="telefono-error" class={control} />
         </Campo>
         <Campo id="servicio" label="¿Qué necesitas?">
           <select id="servicio" name="servicio" required aria-describedby="servicio-error" class={control}>
@@ -71,8 +72,8 @@ const control = 'block w-full rounded-xl border border-line bg-white px-4 py-3 t
 
         <div class="sm:col-span-2">
           <label class="flex items-start gap-3 text-sm text-ink-soft">
-            <input id="consentimiento" name="consentimiento" type="checkbox" required aria-describedby="consentimiento-error" class="mt-0.5 size-5 shrink-0 rounded accent-brand" />
-            <span>Acepto la <a href="/privacidad" class="font-semibold text-brand underline">política de privacidad</a> y que me contacten sobre mi solicitud.</span>
+            <input id="consentimiento" name="consentimiento" type="checkbox" required aria-describedby="consentimiento-error" class="mt-0.5 size-5 shrink-0 accent-accent" />
+            <span>Acepto la <a href="/privacidad" class="font-semibold text-ink underline underline-offset-2 hover:text-accent">política de privacidad</a> y que me contacten sobre mi solicitud.</span>
           </label>
           <p id="consentimiento-error" class="mt-1.5 text-sm text-danger empty:hidden" data-error></p>
         </div>
@@ -80,7 +81,7 @@ const control = 'block w-full rounded-xl border border-line bg-white px-4 py-3 t
         <div class="sm:col-span-2">
           <Button type="submit" tamano="lg" class="w-full" id="form-enviar">
             <span data-texto>Enviar y recibir propuesta</span>
-            <Icon nombre="flecha" class="size-5 transition-transform group-hover:translate-x-1" />
+            <Icon nombre="chevron" class="size-4 transition-transform group-hover:translate-x-0.5" />
           </Button>
           <div id="form-estado" role="status" aria-live="polite" class="mt-4 empty:hidden"></div>
         </div>
@@ -93,10 +94,10 @@ const control = 'block w-full rounded-xl border border-line bg-white px-4 py-3 t
 </section>
 
 <template id="plantilla-error-servidor">
-  <div class="rounded-xl border border-line bg-surface-alt p-4 text-sm">
+  <div class="rounded-[6px] border border-line bg-surface p-4 text-sm">
     <p class="font-semibold">No pudimos enviar tu mensaje en este momento.</p>
     <p class="mt-1 text-ink-soft">Envíanos los mismos datos por WhatsApp y te respondemos igual de rápido.</p>
-    <a data-whatsapp="form-fallback" target="_blank" rel="noopener" class="mt-3 inline-flex items-center gap-2 rounded-full bg-whatsapp px-4 py-2 font-semibold text-ink hover:brightness-95">
+    <a data-whatsapp="form-fallback" target="_blank" rel="noopener" class="mt-3 inline-flex items-center gap-2 rounded-[4px] bg-whatsapp px-4 py-2 font-mono text-xs font-semibold tracking-wider text-black uppercase hover:brightness-110">
       Enviar por WhatsApp
     </a>
   </div>

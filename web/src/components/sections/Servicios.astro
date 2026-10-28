@@ -8,8 +8,8 @@ import Section from '../ui/Section.astro';
   <ul class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
     {
       servicios.map((s, i) => (
-        <li data-reveal style={`--reveal-delay: ${i * 80}ms`} class="group flex flex-col rounded-card border border-line bg-white p-6 transition hover:-translate-y-1 hover:border-brand/40 hover:shadow-xl hover:shadow-brand/10">
-          <span class="flex size-12 items-center justify-center rounded-xl bg-brand-soft text-brand transition group-hover:bg-brand group-hover:text-white">
+        <li data-reveal style={`--reveal-delay: ${i * 80}ms`} class="group flex flex-col rounded-card border border-line bg-panel p-6 transition hover:-translate-y-1 hover:border-brand/50">
+          <span class="flex size-12 items-center justify-center rounded-[6px] bg-brand-soft text-brand transition group-hover:bg-brand group-hover:text-white">
             <Icon nombre={s.icono} />
           </span>
           <h3 class="mt-5 text-lg font-bold">{s.nombre}</h3>
@@ -17,25 +17,25 @@ import Section from '../ui/Section.astro';
           <ul class="mt-4 space-y-2 text-sm">
             {s.puntos.map((p) => <li class="flex gap-2"><Icon nombre="check" class="mt-0.5 size-4 shrink-0 text-accent" />{p}</li>)}
           </ul>
-          <p class="mt-auto pt-6 text-sm text-ink-soft">
-            Desde <span class="text-xl font-extrabold text-ink">{formatoSoles(s.desde)}</span>
+          <p class="mt-auto flex items-baseline gap-2 border-t border-line pt-5 font-mono text-xs tracking-wider text-ink-soft uppercase">
+            Desde <span class="font-sans text-2xl font-extrabold tracking-tight text-ink normal-case">{formatoSoles(s.desde)}</span>
           </p>
         </li>
       ))
     }
-    <li data-reveal style={`--reveal-delay: ${servicios.length * 80}ms`} class="flex flex-col justify-between rounded-card bg-ink p-6 text-white">
+    <li data-reveal style={`--reveal-delay: ${servicios.length * 80}ms`} class="rayado flex flex-col justify-between rounded-card border border-brand/40 bg-brand-soft p-6">
       <div>
-        <span class="flex size-12 items-center justify-center rounded-xl bg-white/10 text-accent">
+        <span class="flex size-12 items-center justify-center rounded-[6px] bg-white/10 text-accent">
           <Icon nombre="soporte" />
         </span>
         <h3 class="mt-5 text-lg font-bold">Planes mensuales</h3>
-        <p class="mt-2 text-sm text-white/70">Mantén tu web segura, actualizada y atrayendo clientes.</p>
+        <p class="mt-2 text-sm text-ink-soft">Mantén tu web segura, actualizada y atrayendo clientes.</p>
         <ul class="mt-4 space-y-2 text-sm">
           {mensualidades.incluye.map((p) => <li class="flex gap-2"><Icon nombre="check" class="mt-0.5 size-4 shrink-0 text-accent" />{p}</li>)}
         </ul>
       </div>
-      <p class="pt-6 text-sm text-white/70">
-        De <span class="text-xl font-extrabold text-white">{formatoSoles(mensualidades.desde)}</span> a {formatoSoles(mensualidades.hasta)} / mes
+      <p class="mt-6 flex flex-wrap items-baseline gap-2 border-t border-brand/30 pt-5 font-mono text-xs tracking-wider text-ink-soft uppercase">
+        De <span class="font-sans text-2xl font-extrabold tracking-tight text-ink normal-case">{formatoSoles(mensualidades.desde)}</span> a {formatoSoles(mensualidades.hasta)} / mes
       </p>
     </li>
   </ul>

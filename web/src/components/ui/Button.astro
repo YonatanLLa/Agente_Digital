@@ -1,7 +1,7 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
 
-type Variante = 'primario' | 'secundario' | 'whatsapp' | 'claro';
+type Variante = 'primario' | 'secundario' | 'whatsapp';
 
 type Props = {
   variante?: Variante;
@@ -12,20 +12,21 @@ type Props = {
 
 const { variante = 'primario', tamano = 'md', href, class: className, ...rest } = Astro.props;
 
+// Botones rectos con texto en monoespaciada y mayúsculas, al estilo de motion.dev.
+// El primario usa el turquesa con texto negro: es el color con más contraste sobre el fondo oscuro.
 const variantes: Record<Variante, string> = {
-  primario: 'bg-brand text-white shadow-lg shadow-brand/25 hover:bg-brand-strong',
-  secundario: 'border border-line bg-white text-ink hover:border-brand hover:text-brand',
-  whatsapp: 'bg-whatsapp text-ink hover:brightness-95',
-  claro: 'bg-white text-brand-strong hover:bg-brand-soft',
+  primario: 'bg-accent text-black hover:bg-accent-strong',
+  secundario: 'border border-line text-ink hover:border-ink-soft hover:bg-panel',
+  whatsapp: 'bg-whatsapp text-black hover:brightness-110',
 };
 
 const tamanos = {
-  md: 'px-5 py-2.5 text-sm',
-  lg: 'px-7 py-3.5 text-base',
+  md: 'px-4 py-2.5 text-xs',
+  lg: 'px-6 py-4 text-sm',
 };
 
 const clases = [
-  'group inline-flex items-center justify-center gap-2 rounded-full font-semibold whitespace-nowrap transition disabled:cursor-not-allowed disabled:opacity-60',
+  'group inline-flex items-center justify-center gap-2 rounded-[4px] font-mono font-semibold tracking-wider whitespace-nowrap uppercase transition disabled:cursor-not-allowed disabled:opacity-60',
   variantes[variante],
   tamanos[tamano],
   className,

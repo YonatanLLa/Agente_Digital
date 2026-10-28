@@ -5,22 +5,22 @@ import Button from './ui/Button.astro';
 import Icon from './ui/Icon.astro';
 ---
 
-<header class="sticky top-0 z-40 border-b border-line/70 bg-white/85 backdrop-blur-md" transition:animate="none">
-  <div class="container-page flex h-16 items-center justify-between gap-4">
+<header class="sticky top-0 z-40 border-b border-line bg-surface/80 backdrop-blur-md" transition:animate="none">
+  <div class="container-page flex h-18 items-center justify-between gap-4">
     <Logo />
 
-    <nav aria-label="Principal" class="hidden md:block">
-      <ul class="flex items-center gap-7 text-sm font-medium text-ink-soft">
-        {navegacion.map((item) => <li><a href={item.href} class="transition hover:text-brand">{item.label}</a></li>)}
+    <nav aria-label="Principal" class="hidden lg:block">
+      <ul class="flex items-center gap-8 font-mono text-xs font-semibold tracking-wider uppercase">
+        {navegacion.map((item) => <li><a href={item.href} class="text-ink transition hover:text-accent">{item.label}</a></li>)}
       </ul>
     </nav>
 
     <div class="flex items-center gap-2">
-      <div class="hidden sm:block"><Button href="/#contacto">Cotiza gratis</Button></div>
+      <div class="hidden sm:block"><Button href="/#contacto" variante="secundario">Cotiza gratis</Button></div>
       <button
         type="button"
         id="menu-boton"
-        class="inline-flex size-10 items-center justify-center rounded-full text-ink hover:bg-surface-alt md:hidden"
+        class="inline-flex size-10 items-center justify-center rounded-[4px] border border-line text-ink hover:bg-panel lg:hidden"
         aria-expanded="false"
         aria-controls="menu-movil"
         aria-label="Abrir menú"
@@ -31,10 +31,10 @@ import Icon from './ui/Icon.astro';
     </div>
   </div>
 
-  <nav id="menu-movil" aria-label="Principal (móvil)" class="border-t border-line bg-white md:hidden" hidden>
-    <ul class="container-page flex flex-col py-3 text-base font-medium">
-      {navegacion.map((item) => <li><a href={item.href} class="block rounded-lg px-2 py-3 hover:bg-surface-alt">{item.label}</a></li>)}
-      <li class="pt-2 pb-1"><Button href="/#contacto" class="w-full">Cotiza gratis</Button></li>
+  <nav id="menu-movil" aria-label="Principal (móvil)" class="border-t border-line bg-surface lg:hidden" hidden>
+    <ul class="container-page flex flex-col py-3 font-mono text-sm font-semibold tracking-wider uppercase">
+      {navegacion.map((item) => <li><a href={item.href} class="flex items-center justify-between border-b border-line px-1 py-4 hover:text-accent">{item.label}<Icon nombre="chevron" class="size-4 text-ink-soft" /></a></li>)}
+      <li class="pt-4 pb-2"><Button href="/#contacto" class="w-full">Cotiza gratis</Button></li>
     </ul>
   </nav>
 </header>

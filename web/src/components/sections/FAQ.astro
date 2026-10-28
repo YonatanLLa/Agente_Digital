@@ -5,13 +5,13 @@ import Section from '../ui/Section.astro';
 ---
 
 <Section id="preguntas" eyebrow="Preguntas frecuentes" titulo="Resolvemos tus dudas">
-  <div class="mx-auto max-w-3xl divide-y divide-line rounded-card border border-line bg-white" data-reveal>
+  <div class="divide-y divide-line rounded-card border border-line bg-panel" data-reveal>
     {
       faq.map((item) => (
         <details class="group px-6 py-5 [&_summary::-webkit-details-marker]:hidden">
-          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-lg font-semibold transition hover:text-accent">
             {item.pregunta}
-            <Icon nombre="flecha" class="size-5 shrink-0 rotate-90 text-brand transition group-open:-rotate-90" />
+            <Icon nombre="chevron" class="size-5 shrink-0 rotate-90 text-ink-soft transition group-open:-rotate-90 group-open:text-accent" />
           </summary>
           <p class="mt-3 text-ink-soft">{item.respuesta}</p>
         </details>

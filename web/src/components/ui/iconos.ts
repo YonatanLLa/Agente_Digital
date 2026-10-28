@@ -2,6 +2,7 @@
 export const iconos = {
   check: '<path d="M20 6 9 17l-5-5"/>',
   flecha: '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+  chevron: '<path d="m9 18 6-6-6-6"/>',
   menu: '<path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/>',
   cerrar: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
   cohete:

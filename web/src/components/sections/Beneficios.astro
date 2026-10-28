@@ -9,7 +9,7 @@ import Section from '../ui/Section.astro';
     {
       beneficios.map((b, i) => (
         <li data-reveal style={`--reveal-delay: ${(i % 3) * 90}ms`} class="flex gap-4">
-          <span class="flex size-11 shrink-0 items-center justify-center rounded-xl bg-white text-brand shadow-sm ring-1 ring-line">
+          <span class="flex size-11 shrink-0 items-center justify-center rounded-[6px] bg-panel text-accent ring-1 ring-line">
             <Icon nombre={b.icono} class="size-5" />
           </span>
           <div>

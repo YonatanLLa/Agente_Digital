@@ -22,7 +22,7 @@ const { title, description, noindex, jsonLd } = Astro.props;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#5536e8" />
+    <meta name="theme-color" content="#09090b" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <SEO title={title} description={description} noindex={noindex} jsonLd={jsonLd} />
@@ -30,7 +30,7 @@ const { title, description, noindex, jsonLd } = Astro.props;
     <ClientRouter />
   </head>
   <body>
-    <a href="#contenido" class="sr-only z-50 rounded-full bg-brand px-4 py-2 font-semibold text-white focus:not-sr-only focus:fixed focus:top-3 focus:left-3">Saltar al contenido</a>
+    <a href="#contenido" class="sr-only z-50 rounded-[4px] bg-accent px-4 py-2 font-mono text-xs font-semibold tracking-wider text-black uppercase focus:not-sr-only focus:fixed focus:top-3 focus:left-3">Saltar al contenido</a>
     <Header />
     <main id="contenido">
       <slot />
